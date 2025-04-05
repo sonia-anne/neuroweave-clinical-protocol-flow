@@ -11,35 +11,21 @@ st.title("🧠 NEUROWEAVE – Full Clinical Protocol Flow")
 st.markdown("An advanced scientific visualization of each clinical phase of NEUROWEAVE nanobot: from injection to regeneration and self-destruction.")
 
 # --- SECTION 1: MAIN FLOWCHART (Graphviz) ---
-st.header("📌 Intelligent Clinical Flow Diagram")
+st.header("📌 Intelligent Clinical Flow Diagram (Zoom Enhanced)")
 
 dot = graphviz.Digraph()
-dot.attr(rankdir='LR', size='12')
+dot.attr(rankdir='LR', size='16,12')  # Aumenta el tamaño horizontal y vertical
 
-nodes = {
-    "A": "💉 Injection",
-    "B": "PEG Coating\nImmune Evasion",
-    "C": "Magnetic Navigation",
-    "D": "BBB Crossing",
-    "E": "3D Ventricle Mapping",
-    "F": "✂️ Obstruction Clearance",
-    "G": "Sensor Check:\nICP, pH, Flow",
-    "H": "BDNF/VEGF Release",
-    "I": "Ependymal Regeneration",
-    "J": "⏳ Self-Destruction (72h)",
-    "K": "📡 External Patch Monitoring",
-    "L": "📊 AI Medical Dashboard"
-}
+# Puedes cambiar también los colores para mejor contraste si deseas
 for key, label in nodes.items():
-    dot.node(key, label, shape="box", style="filled", color="lightblue")
+    dot.node(key, label, shape="box", style="filled", color="lightblue", fontsize="20")
 
-edges = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "E"), ("E", "F"), 
-         ("F", "G"), ("G", "H"), ("H", "I"), ("I", "J"), ("J", "K"), ("K", "L")]
+# Define las conexiones
 for src, tgt in edges:
     dot.edge(src, tgt)
 
-st.graphviz_chart(dot, use_container_width=True)
-
+# Visualiza el diagrama en mayor resolución
+st.graphviz_chart(dot, use_container_width=False)  # <-- set False para evitar escalado forzado
 # --- SECTION 2: BOTTLENECK DETECTION (NetworkX) ---
 st.header("⚠️ Bottleneck Analysis in Clinical Protocol")
 
