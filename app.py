@@ -1,3 +1,4 @@
+
 import streamlit as st
 import graphviz
 import networkx as nx
@@ -7,41 +8,42 @@ import plotly.graph_objects as go
 
 # --- STREAMLIT CONFIG ---
 st.set_page_config(page_title="NEUROWEAVE - Clinical Protocol Flow", layout="wide")
-st.markdown("<h1 style='text-align: center;'>🧠 NEUROWEAVE: Full Clinical Protocol Flowchart</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>A scientific visualization of the nanobot's behavior in real clinical phases – from injection to self-destruction and monitoring.</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>ðŸ§  NEUROWEAVE: Full Clinical Protocol Flowchart</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>A scientific visualization of the nanobot's behavior in real clinical phases â€“ from injection to self-destruction and monitoring.</p>", unsafe_allow_html=True)
 
-# --- 1. MAIN FLOW (GRAPHVIZ) ---
-st.markdown("## 📌 Clinical Flowchart with Medical AI (Graphviz)")
+# --- 1. CLINICAL FLOWCHART ---
+st.markdown("## ðŸ“Œ Clinical Flowchart with Medical AI (Graphviz)")
+st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
 
 dot = graphviz.Digraph()
-dot.attr(rankdir='LR', size='12')
+dot.attr(rankdir='LR', size='8')
 
 nodes = {
-    "A": "💉 Injection",
+    "A": "ðŸ’‰ Injection",
     "B": "PEG Coating\nImmune Evasion",
     "C": "Magnetic Navigation",
     "D": "Blood-Brain Barrier Crossing",
     "E": "Ventricle Mapping",
-    "F": "✂️ Blockage Clearance",
+    "F": "âœ‚ï¸ Blockage Clearance",
     "G": "Sensor Check\n(ICP, pH, Flow)",
     "H": "BDNF/VEGF Release",
     "I": "Ependymal Regeneration",
-    "J": "⏳ Self-Destruction (72h)",
-    "K": "📡 External Patch Monitoring",
-    "L": "📊 AI Dashboard & Alerts"
+    "J": "â³ Self-Destruction (72h)",
+    "K": "ðŸ“¡ External Patch Monitoring",
+    "L": "ðŸ“Š AI Dashboard & Alerts"
 }
-for key, label in nodes.items():
-    dot.node(key, label, shape="box", style="filled", color="deepskyblue")
-
 edges = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "E"), ("E", "F"), 
          ("F", "G"), ("G", "H"), ("H", "I"), ("I", "J"), ("J", "K"), ("K", "L")]
+for key, label in nodes.items():
+    dot.node(key, label, shape="box", style="filled", color="deepskyblue")
 for src, tgt in edges:
     dot.edge(src, tgt)
 
-st.graphviz_chart(dot)
+st.graphviz_chart(dot, use_container_width=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # --- 2. BOTTLENECK ANALYSIS ---
-st.markdown("## ⚠️ Protocol Bottleneck Points (NetworkX)")
+st.markdown("## âš ï¸ Protocol Bottleneck Points (NetworkX)")
 G = nx.DiGraph()
 for src, tgt in edges:
     G.add_edge(nodes[src], nodes[tgt])
@@ -52,8 +54,8 @@ nx.draw(G, pos, with_labels=True, node_color="lightgreen", node_size=2600,
         font_size=9, font_weight='bold', edge_color='gray', ax=ax)
 st.pyplot(fig)
 
-# --- 3. CLINICAL TIMELINE (Plotly) ---
-st.markdown("## 🕒 Clinical Timeline of Each Phase (Plotly)")
+# --- 3. CLINICAL TIMELINE ---
+st.markdown("## ðŸ•’ Clinical Timeline of Each Phase (Plotly)")
 df_timeline = pd.DataFrame({
     "Phase": list(nodes.values()),
     "Hours": [0.2, 0.5, 1, 1.5, 3, 4, 6, 24, 48, 72, 100, 120]
@@ -73,7 +75,7 @@ fig_timeline.update_layout(title="NEUROWEAVE: Clinical Phase Timeline",
 st.plotly_chart(fig_timeline, use_container_width=True)
 
 # --- 4. SENSOR HEATMAP ---
-st.markdown("## 🔥 Priority of Clinical Sensors (Heatmap)")
+st.markdown("## ðŸ”¥ Priority of Clinical Sensors (Heatmap)")
 sensor_data = pd.DataFrame({
     "Sensors": ["ICP", "Flow", "pH Trigger", "O2 Levels", "Molecular Signals"],
     "Priority": [9.5, 8.7, 9.1, 7.5, 8.9]
@@ -87,19 +89,22 @@ fig_heatmap = go.Figure(data=go.Heatmap(
 fig_heatmap.update_layout(title="Sensor Priority Heatmap", height=300)
 st.plotly_chart(fig_heatmap, use_container_width=True)
 
-# --- 5. QUANTUM DECISION SIMULATION ---
-st.markdown("## 🔺 Quantum-Based AI Decision Logic (Graphviz)")
+# --- 5. QUANTUM DECISION LOGIC ---
+st.markdown("## ðŸ”º Quantum-Based AI Decision Logic (Graphviz)")
+st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
 q = graphviz.Digraph()
+q.attr(rankdir='LR', size='6')
 q.attr('node', shape='ellipse', style='filled', color='mediumorchid')
 q.edge("START", "HIGH ICP", label="> Threshold")
-q.edge("START", "NORMAL", label="≤ Threshold")
+q.edge("START", "NORMAL", label="â‰¤ Threshold")
 q.edge("HIGH ICP", "Enzyme Release")
 q.edge("NORMAL", "Regeneration")
 q.edge("Enzyme Release", "Regeneration")
 q.edge("Regeneration", "Self-Destruct")
-st.graphviz_chart(q)
+st.graphviz_chart(q, use_container_width=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # --- FOOTER ---
 st.markdown("---")
 st.success("This protocol flow represents every step in the NEUROWEAVE nanobot's medical action: from immunological evasion and AI navigation to real-time regeneration, monitoring, and ethical self-destruction.")
-st.markdown("<p style='text-align: center; font-size: 14px;'>Designed by Sonia Annette Echeverría Vera – Ecuadorian Young Scientist | UNESCO-Al Fozan Candidate</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-size: 14px;'>Designed by Sonia Annette EcheverrÃ­a Vera â€“ Ecuadorian Young Scientist | UNESCO-Al Fozan Candidate</p>", unsafe_allow_html=True)
