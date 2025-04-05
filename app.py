@@ -5,92 +5,96 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.graph_objects as go
 
-# --- PAGE CONFIGURATION ---
-st.set_page_config(page_title="NEUROWEAVE Clinical Flowchart", layout="wide")
-st.title("🧠 NEUROWEAVE – Full Clinical Protocol Flow")
-st.markdown("An advanced scientific visualization of each clinical phase of NEUROWEAVE nanobot: from injection to regeneration and self-destruction.")
+# --- STREAMLIT CONFIG ---
+st.set_page_config(page_title="NEUROWEAVE - Intelligent Clinical Flow", layout="wide", page_icon="🧠")
+st.title("🧠 NEUROWEAVE - Intelligent Clinical Flow Diagram")
+st.markdown("#### Visualizing the complete clinical journey of the NEUROWEAVE nanobot — from injection to self-destruction and monitoring — using AI and real-world protocols.")
 
-# --- SECTION 1: MAIN FLOWCHART (Graphviz) ---
-st.header("📌 Intelligent Clinical Flow Diagram (Zoom Enhanced)")
+# --- GRAPHVIZ FLOW ---
+st.header("🚀 Intelligent Clinical Protocol (Graphviz)")
+flow = graphviz.Digraph()
+flow.attr(rankdir='LR', size='15', bgcolor='white')
 
-dot = graphviz.Digraph()
-dot.attr(rankdir='LR', size='16,12')  # Aumenta el tamaño horizontal y vertical
+steps = {
+    "A": "💉 Injection",
+    "B": "PEG Coating\nImmune Camouflage",
+    "C": "Magnetic Navigation",
+    "D": "Crossing Blood-Brain Barrier",
+    "E": "3D Ventricle Mapping",
+    "F": "✂️ Obstruction Removal",
+    "G": "Sensor Diagnostics:\nICP, Flow, pH",
+    "H": "BDNF/VEGF Release",
+    "I": "Ependymal Regeneration",
+    "J": "⏳ Self-Destruction",
+    "K": "📡 Patch Monitoring",
+    "L": "📊 AI Medical Dashboard"
+}
 
-# Puedes cambiar también los colores para mejor contraste si deseas
-for key, label in nodes.items():
-    dot.node(key, label, shape="box", style="filled", color="lightblue", fontsize="20")
+for key, label in steps.items():
+    flow.node(key, label, shape="box", style="filled", color="#bae6fd")
 
-# Define las conexiones
-for src, tgt in edges:
-    dot.edge(src, tgt)
+connections = [("A", "B"), ("B", "C"), ("C", "D"), ("D", "E"), ("E", "F"), ("F", "G"), ("G", "H"), ("H", "I"), ("I", "J"), ("J", "K"), ("K", "L")]
+for s, t in connections:
+    flow.edge(s, t, color="#0ea5e9")
 
-# Visualiza el diagrama en mayor resolución
-st.graphviz_chart(dot, use_container_width=False)  # <-- set False para evitar escalado forzado
-# --- SECTION 2: BOTTLENECK DETECTION (NetworkX) ---
-st.header("⚠️ Bottleneck Analysis in Clinical Protocol")
+st.graphviz_chart(flow, use_container_width=True)
+
+# --- NETWORKX BOTTLENECK ANALYSIS ---
+st.header("⚠️ Bottleneck and Pathway Dependency (NetworkX)")
 
 G = nx.DiGraph()
-for src, tgt in edges:
-    G.add_edge(nodes[src], nodes[tgt])
+for src, dst in connections:
+    G.add_edge(steps[src], steps[dst])
 
-fig, ax = plt.subplots(figsize=(12, 6))
-pos = nx.spring_layout(G, seed=42)
-nx.draw(G, pos, with_labels=True, node_color="#90ee90", node_size=2500,
-        font_size=9, font_weight='bold', edge_color='gray', ax=ax)
+fig, ax = plt.subplots(figsize=(14, 7))
+pos = nx.kamada_kawai_layout(G)
+nx.draw(G, pos, with_labels=True, node_color="#bbf7d0", node_size=2500, font_size=9, edge_color="#94a3b8", font_weight="bold", ax=ax)
 st.pyplot(fig)
 
-# --- SECTION 3: PHASE TIMELINE (Plotly) ---
-st.header("🕒 Clinical Phase Timeline")
+# --- TIMELINE CHART ---
+st.header("⏱️ Timeline of NEUROWEAVE Clinical Phases")
 
-df_timeline = pd.DataFrame({
-    "Phase": list(nodes.values()),
-    "Hours": [0.2, 0.5, 1, 1.5, 3, 4, 6, 24, 48, 72, 100, 120]
+timeline_data = pd.DataFrame({
+    "Step": list(steps.values()),
+    "Time (hours)": [0.1, 0.3, 0.6, 1.0, 1.5, 3, 4, 24, 48, 72, 96, 120]
 })
-fig_timeline = go.Figure()
-fig_timeline.add_trace(go.Scatter(
-    x=df_timeline["Hours"],
-    y=df_timeline["Phase"],
+
+timeline_fig = go.Figure()
+timeline_fig.add_trace(go.Scatter(
+    x=timeline_data["Time (hours)"],
+    y=timeline_data["Step"],
     mode="lines+markers",
-    marker=dict(color='crimson', size=10),
-    line=dict(color='deepskyblue', width=3)
+    marker=dict(size=10, color="gold"),
+    line=dict(width=3, color="royalblue")
 ))
-fig_timeline.update_layout(title="NEUROWEAVE Clinical Timeline",
-                           xaxis_title="Time (hours)",
-                           yaxis_title="Protocol Phase",
-                           height=700,
-                           plot_bgcolor="#0f172a",
-                           paper_bgcolor="#0f172a",
-                           font=dict(color="white"))
-st.plotly_chart(fig_timeline, use_container_width=True)
+timeline_fig.update_layout(
+    title="NEUROWEAVE Timeline: Step-by-Step Healing Journey",
+    xaxis_title="Time (hours)",
+    yaxis_title="Clinical Action",
+    template="plotly_white",
+    height=800
+)
+st.plotly_chart(timeline_fig, use_container_width=True)
 
-# --- SECTION 4: SENSOR PRIORITY HEATMAP ---
-st.header("🔥 Sensor Priority Heatmap")
-
-sensor_data = pd.DataFrame({
-    "Sensors": ["ICP", "Flow", "pH Trigger", "O2 Levels", "Molecular Signals"],
-    "Priority": [9.5, 8.7, 9.1, 7.5, 8.9]
+# --- SENSOR PRIORITY HEATMAP ---
+st.header("🔥 Clinical Sensor Importance Heatmap")
+sensor_df = pd.DataFrame({
+    "Sensor": ["ICP", "Flow Rate", "pH Trigger", "O2 Levels", "Neural Signals"],
+    "Priority": [9.6, 8.8, 9.3, 7.9, 9.0]
 })
-fig_heatmap = go.Figure(data=go.Heatmap(
-    z=[sensor_data["Priority"]],
-    x=sensor_data["Sensors"],
-    y=["Priority Index"],
-    colorscale="YlOrRd"
+
+heatmap_fig = go.Figure(data=go.Heatmap(
+    z=[sensor_df["Priority"]],
+    x=sensor_df["Sensor"],
+    y=["Priority"],
+    colorscale="Turbo"
 ))
-fig_heatmap.update_layout(title="Sensor Activation Priority", height=300)
-st.plotly_chart(fig_heatmap, use_container_width=True)
-
-# --- SECTION 5: QUANTUM DECISION SIMULATION ---
-st.header("🔺 Quantum-Level Decision Simulation")
-
-q = graphviz.Digraph()
-q.attr('node', shape='ellipse', style='filled', color='mediumpurple')
-q.edge("START", "HIGH ICP", label="> Threshold")
-q.edge("START", "NORMAL", label="≤ Threshold")
-q.edge("HIGH ICP", "Enzyme Release")
-q.edge("NORMAL", "Regeneration")
-q.edge("Enzyme Release", "Regeneration")
-q.edge("Regeneration", "Self-Destruct")
-st.graphviz_chart(q, use_container_width=True)
+heatmap_fig.update_layout(
+    title="Sensor Activation Priority Map",
+    height=300,
+    margin=dict(l=20, r=20, t=50, b=20)
+)
+st.plotly_chart(heatmap_fig, use_container_width=True)
 
 # --- FOOTER ---
-st.success("This diagram summarizes NEUROWEAVE’s clinical process: combining immunology, AI, magnetic navigation, regeneration, and self-controlled biodegradation.")
+st.success("This intelligent flow integrates immunoengineering, fluid dynamics, neuroregeneration, and AI diagnostics — all orchestrated through NEUROWEAVE.")
